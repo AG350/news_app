@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:newsapp/src/models/category_model.dart';
 import 'package:newsapp/src/services/news_service.dart';
+import 'package:newsapp/src/theme/theme.dart';
+import 'package:newsapp/src/widgets/news_list.dart';
 import 'package:provider/provider.dart';
 
 class Tab2Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final newsService = Provider.of<NewsService>(context);
     return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
             _CategoriesList(),
+            Expanded(child: NewsList(newsService.getArticlesBySelectedCategory))
           ],
         ),
       ),
@@ -54,9 +58,11 @@ class _CategoryIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final newsService = Provider.of<NewsService>(context);
     return GestureDetector(
       onTap: () {
-        print('${category.label}');
+        //print('${category.label}');
+        newsService.selectedCategory = category.label;
       },
       child: Container(
         width: 40,
@@ -65,7 +71,9 @@ class _CategoryIcon extends StatelessWidget {
         decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
         child: Icon(
           category.icon,
-          color: Colors.black54,
+          color: newsService.selectedCategory == this.category.label
+              ? myTheme.accentColor
+              : Colors.black54,
         ),
       ),
     );
